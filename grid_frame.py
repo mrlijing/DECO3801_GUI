@@ -8,7 +8,7 @@ class GridFrame(tk.Frame):
         self.col_no = 0
         self.incre_row = False
 
-    def create_cell(self, frame: tk.Frame):
+    def create_cell(self, frame):
 
         frame.grid(row=self.row_no, column=self.col_no)
 
@@ -22,4 +22,4 @@ class GridFrame(tk.Frame):
             self.col_no = 0
             self.row_no += 1
 
-            self.incre_row = True if not self.incre_row else False
+            self.incre_row = True
