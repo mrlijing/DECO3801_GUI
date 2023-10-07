@@ -9,7 +9,7 @@ class TopNavBar(tk.Frame):
         self.pages = pages
         self.current_page = None
         self.nav_items = {}
-        self.create_nav_bar()
+        self.create_nav_bar()  # Create the navigation bar
 
     def create_nav_bar(self):
         default_page = None
@@ -58,7 +58,7 @@ class TopNavBar(tk.Frame):
             item.configure(bg='lightgray')
 
 def create_content_frame(parent: tk, page_name):
-    frame = tk.Frame(parent, bg='black')
+    frame = tk.Frame(parent, bg='darkgrey')
     label = tk.Label(frame, text=f'Welcome to {page_name}', font=('Helvetica', 16))
     label.pack(padx=20, pady=20)
     return frame
@@ -78,7 +78,12 @@ def main():
         'Report': [create_content_frame(root, 'Report'), 'file.png'],
         'Settings': [create_content_frame(root, 'Settings'), 'settings.png']
     }
+    heading_frame = tk.Frame(bg='#444444', height=40)
+    heading_frame.pack(fill=tk.X)
 
+        # Add a label with the application name to the heading frame
+    app_name_label = tk.Label(heading_frame, text='VenueguardAI', font=('Helvetica', 20), bg='#444444')
+    app_name_label.pack(side=tk.LEFT, padx=10, pady=10)
     navbar = TopNavBar(root, pages)
     navbar.pack(fill=tk.X)
     navbar.show_page('Dashboard')

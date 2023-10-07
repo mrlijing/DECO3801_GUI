@@ -2,7 +2,7 @@ import tkinter as tk
 
 class DashboardHome(tk.Frame):
     def __init__(self, parent: tk.Frame):
-        super().__init__(parent, bg='black')
+        super().__init__(parent, bg='#333333')
         self.create_dashboard_widgets()
 
     def create_dashboard_widgets(self):
