@@ -58,7 +58,7 @@ class TopNavBar(tk.Frame):
             item.configure(bg='lightgray')
 
 def create_content_frame(parent: tk, page_name):
-    frame = tk.Frame(parent, bg='black')
+    frame = tk.Frame(parent, bg='white')
     label = tk.Label(frame, text=f'Welcome to {page_name}', font=('Helvetica', 16))
     label.pack(padx=20, pady=20)
     return frame
