@@ -74,7 +74,6 @@ def main():
 
     pages = {
         'Dashboard': [DashboardHome(root), 'dashboard.png'],
-        'Recordings': [create_content_frame(root, 'Recordings'), 'video.png'],
         'Report': [create_content_frame(root, 'Report'), 'file.png'],
         'Settings': [create_content_frame(root, 'Settings'), 'settings.png']
     }
