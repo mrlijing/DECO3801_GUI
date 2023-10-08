@@ -39,19 +39,18 @@ class Report(tk.Frame):
             self.create_grid()
 
         cell = self.empty_cells.pop(0)
-        folder_frame = tk.Frame(cell)
 
         img = tk.PhotoImage(file='folder.png')
-        img_label = tk.Label(folder_frame, image=img, bg='lightgrey')
+        img_label = tk.Label(cell, image=img, bg='lightgrey')
         img_label.image = img
         img_label.pack(fill=tk.X)
 
-        name_label = tk.Label(folder_frame, bg='lightgrey', text=name)
+        name_label = tk.Label(cell, bg='lightgrey', text=name)
         name_label.pack(fill=tk.X)
 
-        folder_frame.bind("<Enter>", on_enter)
-        folder_frame.bind("<Leave>", on_leave)
-        folder_frame.pack(padx=20, pady=20)
+        cell.bind("<Enter>", on_enter)
+        cell.bind("<Leave>", on_leave)
+        cell.config(padx=20, pady=20)
 
     def create_folders(self):
         for name in self.folder_names:
@@ -77,3 +76,17 @@ class Album(tk.Frame):
             new_frame = tk.Frame(self.grid)
             self.empty_cell.append(new_frame)
             self.grid.create_cell(new_frame)
+            
+def main():
+
+    root = tk.Tk()
+
+    names = ['F1', 'F2', 'F3', 'F4', 'F5', 'F6']
+    report = Report(root, names)
+
+    report.pack()
+    root.geometry("800x800")
+    root.mainloop()
+
+if __name__ == "__main__":
+    main()
