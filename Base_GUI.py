@@ -4,11 +4,15 @@ from Report import Report
 
 
 class TopNavBar(tk.Frame):
-    def __init__(self, parent, pages: dict[str, list[tk.Frame, str]]):
+    def __init__(self, parent):
         super().__init__(parent, bg='lightgray')
         self.parent = parent
-        self.pages = pages
         self.current_page = None
+        self.pages = {
+        'Dashboard': [DashboardHome(parent), 'dashboard.png'],
+        'Report': [Report(parent, 'cctv_screenshots', self), 'file.png'],
+        'Settings': [create_content_frame(parent, 'Settings'), 'settings.png']
+        }
         self.nav_items = {}
         self.create_nav_bar()  # Create the navigation bar
 
@@ -73,18 +77,13 @@ def main():
     root.title('Base GUI')
     root.protocol("WM_DELETE_WINDOW", on_closing)
 
-    pages = {
-        'Dashboard': [DashboardHome(root), 'dashboard.png'],
-        'Report': [Report(root, 'cctv_screenshots'), 'file.png'],
-        'Settings': [create_content_frame(root, 'Settings'), 'settings.png']
-    }
     heading_frame = tk.Frame(bg='#444444', height=40)
     heading_frame.pack(fill=tk.X)
 
         # Add a label with the application name to the heading frame
     app_name_label = tk.Label(heading_frame, text='VenueguardAI', font=('Helvetica', 20), bg='#444444')
     app_name_label.pack(side=tk.LEFT, padx=10, pady=10)
-    navbar = TopNavBar(root, pages)
+    navbar = TopNavBar(root)
     navbar.pack(fill=tk.X)
     navbar.show_page('Dashboard')
 

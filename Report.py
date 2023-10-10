@@ -4,9 +4,10 @@ from PIL import Image, ImageTk
 from grid_frame import GridFrame
 
 class Report(tk.Frame):
-    def __init__(self, parent, screenshots_folder):
+    def __init__(self, parent, screenshots_folder, navbar):
         super().__init__(parent, borderwidth=20)
         self.parent = parent
+        self.navbar = navbar
         self.screenshots_folder = screenshots_folder
         self.max_col = 4
         self.grid = GridFrame(self, self.max_col)
@@ -66,12 +67,15 @@ class Report(tk.Frame):
     def on_click(self, name):
 
         def back():
-            top_bar.pack_forget()
-            album.pack_forget()
+            self.navbar.current_page = self
+            album_frame.pack_forget()
             self.pack()
 
         self.pack_forget()
-        top_bar = tk.Frame(self.parent, bg='darkgrey')
+        album_frame = tk.Frame(self.parent)
+        self.navbar.current_page = album_frame
+        
+        top_bar = tk.Frame(album_frame, bg='darkgrey')
         
         back_button = tk.Button(top_bar, text='Back', command=back)
         back_button.pack(side='left', padx=10)
@@ -81,8 +85,10 @@ class Report(tk.Frame):
 
         top_bar.pack(fill=tk.X)
 
-        album = Album(self.parent, name)
+        album = Album(album_frame, name)
         album.pack()
+
+        album_frame.pack()
 
 class Album(tk.Frame):
     def __init__(self, parent, camera_name):
