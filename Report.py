@@ -4,10 +4,10 @@ from PIL import Image, ImageTk
 from grid_frame import GridFrame
 
 class Report(tk.Frame):
-    def __init__(self, parent, folder_names):
+    def __init__(self, parent, screenshots_folder):
         super().__init__(parent, borderwidth=20)
         self.parent = parent
-        self.folder_names = folder_names
+        self.screenshots_folder = screenshots_folder
         self.max_col = 4
         self.grid = GridFrame(self, self.max_col)
         self.empty_cells = []
@@ -58,7 +58,9 @@ class Report(tk.Frame):
         cell.config(padx=20, pady=20)
 
     def create_folders(self):
-        for name in self.folder_names:
+        names = [entry for entry in os.listdir(self.screenshots_folder) 
+                 if os.path.isdir(os.path.join(self.screenshots_folder, entry))]
+        for name in names:
             self.create_folder_frame(name)
 
     def on_click(self, name):
@@ -147,8 +149,7 @@ def main():
 
     folder_path = 'cctv_screenshots'
 
-    names = [entry for entry in os.listdir(folder_path) if os.path.isdir(os.path.join(folder_path, entry))]
-    report = Report(root, names)
+    report = Report(root, folder_path)
 
     report.pack()
     root.geometry("1200x700")
