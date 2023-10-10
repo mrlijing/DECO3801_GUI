@@ -7,30 +7,25 @@ class DashboardHome(tk.Frame):
         super().__init__(parent, bg='#333333')
         self.yolo_output_folder = yolo_output_folder
         self.camera_frames = []
-        self.camera_labels = []  # Added to store the labels for camera frames
+        self.camera_labels = []
         self.create_dashboard_widgets()
 
     def create_dashboard_widgets(self):
-        label = tk.Label(self, text='Dashboard Page', font=('Helvetica', 16))
+        self.configure(bg='#444444')  # Adjust background color for the main frame
+
+        label = tk.Label(self, text='Dashboard Page', font=('Helvetica', 20), bg='#444444', fg='#FFFFFF')  # Improved label
         label.pack(padx=20, pady=20)
 
         # Create a container frame for the camera placeholders
-        camera_container = tk.Frame(self, bg='#333333')
+        camera_container = tk.Frame(self, bg='#444444')  # Improved background color
         camera_container.pack(padx=20, pady=20)
 
         # Create placeholder frames for two cameras with a black background
-        camera_frame1 = tk.Frame(camera_container, bg='black', width=320, height=240)
-        camera_frame1.pack(side=tk.LEFT, padx=10, pady=10)
-
-        camera_frame2 = tk.Frame(camera_container, bg='black', width=320, height=240)
-        camera_frame2.pack(side=tk.LEFT, padx=10, pady=10)
-
-        # Append the camera frames to the list
-        self.camera_frames.append(camera_frame1)
-        self.camera_frames.append(camera_frame2)
-
-        # Create labels for displaying images
-        self.camera_labels = [tk.Label(frame) for frame in self.camera_frames]
+        for i in range(2):
+            camera_frame = tk.Frame(camera_container, bg='black', width=320, height=240)
+            camera_frame.pack(side=tk.LEFT, padx=10, pady=10)
+            self.camera_frames.append(camera_frame)
+            self.camera_labels.append(tk.Label(camera_frame))
 
         # You can add more widgets or customize the camera frames as needed
 
@@ -65,8 +60,9 @@ def main():
     yolo_output_folder = 'cctv_recordings'  # Change this to the correct folder path
 
     dashboard = DashboardHome(root, yolo_output_folder)
-    dashboard.pack()
+    dashboard.pack(fill=tk.BOTH, expand=True)  # Allow the widget to fill the available space
 
+    root.title('VenueguardAI Dashboard')  # Set the dashboard title
     root.geometry("800x600")
     root.mainloop()
 
