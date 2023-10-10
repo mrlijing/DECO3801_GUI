@@ -1,5 +1,6 @@
 import tkinter as tk
 from Dashboard import DashboardHome
+from Report import Report
 
 
 class TopNavBar(tk.Frame):
@@ -74,7 +75,7 @@ def main():
 
     pages = {
         'Dashboard': [DashboardHome(root), 'dashboard.png'],
-        'Report': [create_content_frame(root, 'Report'), 'file.png'],
+        'Report': [Report(root, 'cctv_screenshots'), 'file.png'],
         'Settings': [create_content_frame(root, 'Settings'), 'settings.png']
     }
     heading_frame = tk.Frame(bg='#444444', height=40)
