@@ -9,7 +9,7 @@ class TopNavBar(tk.Frame):
         self.parent = parent
         self.current_page = None
         self.pages = {
-        'Dashboard': [DashboardHome(parent), 'dashboard.png'],
+        'Dashboard': [DashboardHome(parent, 'cctv_recordings'), 'dashboard.png'],
         'Report': [Report(parent, 'cctv_screenshots', self), 'file.png'],
         'Settings': [create_content_frame(parent, 'Settings'), 'settings.png']
         }
