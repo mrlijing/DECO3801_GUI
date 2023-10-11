@@ -44,7 +44,7 @@ class DashboardHome(tk.Frame):
 
                 # Load the image and display it in the camera frame
                 img = Image.open(image_path)
-                img = img.resize((320, 240), Image.ANTIALIAS)
+                img = img.resize((320, 240), Image.ADAPTIVE)
                 img = ImageTk.PhotoImage(img)
 
                 # Update the image in the existing label for the camera frame
