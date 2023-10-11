@@ -148,18 +148,3 @@ class Album(tk.Frame):
 
         for name in pic_names:
             self.create_pic_frame(name)
-            
-def main():
-
-    root = tk.Tk()
-
-    folder_path = 'cctv_screenshots'
-
-    report = Report(root, folder_path)
-
-    report.pack()
-    root.geometry("1200x700")
-    root.mainloop()
-
-if __name__ == "__main__":
-    main()
