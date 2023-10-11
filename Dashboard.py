@@ -1,6 +1,10 @@
 import tkinter as tk
 from PIL import Image, ImageTk
 import os
+from model import detect_live_camera
+import threading
+
+cam_num = 0
 
 class DashboardHome(tk.Frame):
     def __init__(self, parent: tk.Frame, yolo_output_folder):
@@ -35,8 +39,8 @@ class DashboardHome(tk.Frame):
     def update_camera_images(self):
         for i, (camera_frame, camera_label) in enumerate(zip(self.camera_frames, self.camera_labels)):
             # Read the YOLO output image for each camera
-            camera_output_folder = os.path.join(self.yolo_output_folder, f'F{i+1}')
-            image_files = [f for f in os.listdir(camera_output_folder) if f.endswith('.png')]
+            camera_output_folder = os.path.join(self.yolo_output_folder, f'cam{cam_num}')
+            image_files = [f for f in os.listdir(camera_output_folder) if f.endswith('.jpg')]
 
             if image_files:
                 latest_image = max(image_files, key=lambda x: os.path.getctime(os.path.join(camera_output_folder, x)))
@@ -55,9 +59,9 @@ class DashboardHome(tk.Frame):
         # Schedule the function to run periodically (adjust the time interval as needed)
         self.after(1000, self.update_camera_images)
 
-def main():
+def setup_gui():
     root = tk.Tk()
-    yolo_output_folder = 'cctv_recordings'  # Change this to the correct folder path
+    yolo_output_folder = 'live'  # Change this to the correct folder path
 
     dashboard = DashboardHome(root, yolo_output_folder)
     dashboard.pack(fill=tk.BOTH, expand=True)  # Allow the widget to fill the available space
@@ -65,6 +69,14 @@ def main():
     root.title('VenueguardAI Dashboard')  # Set the dashboard title
     root.geometry("800x600")
     root.mainloop()
+
+def main():
+    cam_num = 0  # Replace with the appropriate camera number
+    model_thread = threading.Thread(target=detect_live_camera, args=(cam_num,))
+    gui_thread = threading.Thread(target=setup_gui)
+
+    gui_thread.start()
+    model_thread.start()
 
 if __name__ == "__main__":
     main()
