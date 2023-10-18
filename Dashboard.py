@@ -4,15 +4,16 @@ import os
 from model import detect_live_camera
 import threading
 import argparse
-
-cam_num = 0
+import time
 
 class DashboardHome(tk.Frame):
-    def __init__(self, parent: tk.Frame, yolo_output_folder):
+    def __init__(self, parent: tk.Frame, yolo_output_folder, num_cams=1):
         super().__init__(parent, bg='#333333')
         self.yolo_output_folder = yolo_output_folder
+        self.num_cams = num_cams
         self.camera_frames = []
         self.camera_labels = []
+        self.num_columns = 2
         self.create_dashboard_widgets()
 
     def create_dashboard_widgets(self):
@@ -25,10 +26,14 @@ class DashboardHome(tk.Frame):
         camera_container = tk.Frame(self, bg='#444444')  # Improved background color
         camera_container.pack(padx=20, pady=20)
 
-        # Create placeholder frames for two cameras with a black background
-        for i in range(2):
+        for i in range(self.num_cams):
+            # Calculate the row and column for the camera frame
+            row = i // self.num_columns
+            col = i % self.num_columns
+
             camera_frame = tk.Frame(camera_container, bg='black', width=320, height=240)
-            camera_frame.pack(side=tk.LEFT, padx=10, pady=10)
+            camera_frame.grid(row=row, column=col, padx=10, pady=10)
+
             self.camera_frames.append(camera_frame)
             self.camera_labels.append(tk.Label(camera_frame))
 
@@ -40,7 +45,7 @@ class DashboardHome(tk.Frame):
     def update_camera_images(self):
         for i, (camera_frame, camera_label) in enumerate(zip(self.camera_frames, self.camera_labels)):
             # Read the YOLO output image for each camera
-            camera_output_folder = os.path.join(self.yolo_output_folder, f'cam{cam_num}')
+            camera_output_folder = os.path.join(self.yolo_output_folder, f'cam{i}')
             image_files = [f for f in os.listdir(camera_output_folder) if f.endswith('.jpg')]
 
             if image_files:
@@ -58,13 +63,13 @@ class DashboardHome(tk.Frame):
                 camera_label.pack(fill=tk.BOTH, expand=True)
 
         # Schedule the function to run periodically (adjust the time interval as needed)
-        self.after(50, self.update_camera_images)
+        self.after(1000, self.update_camera_images)
 
-def setup_gui():
+def setup_gui(num_cams):
     root = tk.Tk()
     yolo_output_folder = 'live'  # Change this to the correct folder path
 
-    dashboard = DashboardHome(root, yolo_output_folder)
+    dashboard = DashboardHome(root, yolo_output_folder, num_cams=num_cams)
     dashboard.pack(fill=tk.BOTH, expand=True)  # Allow the widget to fill the available space
 
     root.title('VenueguardAI Dashboard')  # Set the dashboard title
@@ -77,12 +82,17 @@ def main():
     args = parser.parse_args()
     num_cams = args.num_cams
 
-    for cam_num in range (num_cams):
-        model_thread = threading.Thread(target=detect_live_camera, args=(cam_num,))
-        model_thread.start()
+    model_threads = []
 
-    gui_thread = threading.Thread(target=setup_gui)
+    for cam_num in range (num_cams):
+        model_thread = threading.Thread(target=detect_live_camera, args=(cam_num,), daemon=True)
+        model_thread.start()
+        model_threads.append(model_thread)
+
+    gui_thread = threading.Thread(target=setup_gui, args=(num_cams,))
     gui_thread.start()
+
+    gui_thread.join()
 
 
 if __name__ == "__main__":

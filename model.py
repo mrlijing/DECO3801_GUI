@@ -27,16 +27,15 @@ def detect_live_camera(cam_num):
     while True:
         success, img = cap.read()
 
-        # coordinates
-        results = person_net(img, classes=0, stream=True, vid_stride=1, iou=0.2, device = device)
+        results = person_net(img, classes=0, stream=True, vid_stride=1, iou=0.2, device = device, verbose=False)
 
         s_boxes = []
 
         # Iterate through the results
         for i, r in enumerate(results):
             # Get the bounding boxes and class labels
-            person_boxes = r.boxes.xyxy  # boxes in xyxy format
-            classes = r.boxes.cls  # class values of the boxes
+            person_boxes = r.boxes.xyxy 
+            classes = r.boxes.cls 
 
             # Iterate through the bounding boxes and class labels
             for j, (person_box, cls) in enumerate(zip(person_boxes, classes)):
@@ -46,7 +45,7 @@ def detect_live_camera(cam_num):
                 cropped_image = r.orig_img[y_min_p:y_max_p, x_min_p:x_max_p]
 
                 # Detect cigarettes within the cropped image
-                s_results = smoking_net(cropped_image, iou=0, line_width=1, show_labels=False, max_det=1, device = device)
+                s_results = smoking_net(cropped_image, iou=0, line_width=1, show_labels=False, max_det=1, device = device, verbose = False)
 
                 for s_r in s_results:
                     
@@ -59,7 +58,7 @@ def detect_live_camera(cam_num):
                         iters_since_detection = 0
                         clip_saved = False
 
-                        s_box = s_r.boxes.xyxy[0].tolist()  # Assuming there's only one cigarette detected
+                        s_box = s_r.boxes.xyxy[0].tolist() 
 
                         # Scale the coordinates back to the original image space
                         x_min_s, y_min_s, x_max_s, y_max_s = s_box
@@ -81,7 +80,7 @@ def detect_live_camera(cam_num):
         for box in s_boxes:
             cv2.rectangle(original_image_with_cigarette_box, (box[0], box[2]), (box[1], box[3]), (0, 255, 0), 2)
 
-        #write live photo
+        # write live photo
         cv2.imwrite(f'live/cam{cam_num}/live_frame.jpg', original_image_with_cigarette_box)
 
         if iters_since_detection <= max_iters:
@@ -94,12 +93,12 @@ def detect_live_camera(cam_num):
 
             height, width, _ = original_image_with_cigarette_box.shape
             out_name = f'./clips/{folder_name}/{clip_name}.mp4' 
-            fourcc = cv2.VideoWriter_fourcc(*'mp4v')  # Codec for MP4 format
-            frame_rate = 1  # Adjust as needed
-            frame_size = (width, height)  # Width and height of each frame
+            fourcc = cv2.VideoWriter_fourcc(*'mp4v')  
+            frame_rate = 1 
+            frame_size = (width, height) 
             out = cv2.VideoWriter(out_name, fourcc, frame_rate, frame_size)
 
-            for frame in clip_frames:  # Assuming 'frames' is a list of OpenCV frames
+            for frame in clip_frames:  
                 out.write(frame)
 
             out.release()
