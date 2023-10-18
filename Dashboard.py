@@ -3,6 +3,7 @@ from PIL import Image, ImageTk
 import os
 from model import detect_live_camera
 import threading
+import argparse
 
 cam_num = 0
 
@@ -57,7 +58,7 @@ class DashboardHome(tk.Frame):
                 camera_label.pack(fill=tk.BOTH, expand=True)
 
         # Schedule the function to run periodically (adjust the time interval as needed)
-        self.after(1000, self.update_camera_images)
+        self.after(50, self.update_camera_images)
 
 def setup_gui():
     root = tk.Tk()
@@ -71,12 +72,18 @@ def setup_gui():
     root.mainloop()
 
 def main():
-    cam_num = 0  # Replace with the appropriate camera number
-    model_thread = threading.Thread(target=detect_live_camera, args=(cam_num,))
-    gui_thread = threading.Thread(target=setup_gui)
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--num_cams', type=int, default=1, help='Number of cameras using')
+    args = parser.parse_args()
+    num_cams = args.num_cams
 
+    for cam_num in range (num_cams):
+        model_thread = threading.Thread(target=detect_live_camera, args=(cam_num,))
+        model_thread.start()
+
+    gui_thread = threading.Thread(target=setup_gui)
     gui_thread.start()
-    model_thread.start()
+
 
 if __name__ == "__main__":
     main()

@@ -21,8 +21,8 @@ def detect_live_camera(cam_num):
     clip_frames = []
     clip_saved = True
 
-    if not os.path.exists(f'./live/cam{0}'):
-                os.makedirs(f'./live/cam{0}')
+    if not os.path.exists(f'./live/cam{cam_num}'):
+        os.makedirs(f'./live/cam{cam_num}')
 
     while True:
         success, img = cap.read()
@@ -53,8 +53,8 @@ def detect_live_camera(cam_num):
                     if len(s_r.boxes) > 0:
                         
                         if iters_since_detection > max_iters:
-                            clip_name = datetime.today().strftime('%H-%M-%S')
-                            folder_name = datetime.today().strftime('%d-%m-%Y') + f'/cam{cam_num}'
+                            clip_name = datetime.today().strftime('%d-%m-%Y--%H-%M-%S')
+                            folder_name = f'/cam{cam_num}' #+ datetime.today().strftime('%d-%m-%Y')
 
                         iters_since_detection = 0
                         clip_saved = False
@@ -107,11 +107,8 @@ def detect_live_camera(cam_num):
             clip_frames = []
             clip_saved = True
 
-        '''cv2.imshow('Webcam', original_image_with_cigarette_box)'''
         if cv2.waitKey(1) == ord('q'):
             break
 
     cap.release()
-    cv2.destroyAllWindows()
-
-#detect_live_camera(0)    
+    cv2.destroyAllWindows()   
