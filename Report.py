@@ -2,6 +2,7 @@ import tkinter as tk
 import os
 from PIL import Image, ImageTk
 from grid_frame import GridFrame
+import cv2
 
 class Report(tk.Frame):
     def __init__(self, parent, screenshots_folder, navbar):
@@ -23,7 +24,6 @@ class Report(tk.Frame):
             self.grid.create_cell(new_frame)
 
     def pack_items(self):
-
         self.grid.pack(fill=tk.BOTH, expand=True)
 
     def create_folder_frame(self, name):
@@ -46,21 +46,20 @@ class Report(tk.Frame):
         img = tk.PhotoImage(file='folder.png')
         img_label = tk.Label(cell, image=img, bg='lightgrey')
         img_label.image = img
-        img_label.bind('<Button 1>', lambda event, n=name:self.on_click(n))
+        img_label.bind('<Button 1>', lambda event, n=name: self.on_click(n))
         img_label.pack(fill=tk.X)
 
         name_label = tk.Label(cell, bg='lightgrey', text=name)
-        name_label.bind('<Button 1>', lambda event, n=name:self.on_click(n))
+        name_label.bind('<Button 1>', lambda event, n=name: self.on_click(n))
         name_label.pack(fill=tk.X)
 
         cell.bind("<Enter>", on_enter)
         cell.bind("<Leave>", on_leave)
-        cell.bind("<Button 1>", lambda event, n=name:self.on_click(n))
+        cell.bind("<Button 1>", lambda event, n=name: self.on_click(n))
         cell.config(padx=20, pady=20)
 
     def create_folders(self):
-        names = [entry for entry in os.listdir(self.screenshots_folder) 
-                 if os.path.isdir(os.path.join(self.screenshots_folder, entry))]
+        names = [entry for entry in os.listdir(self.screenshots_folder) if os.path.isdir(os.path.join(self.screenshots_folder, entry))]
         for name in names:
             self.create_folder_frame(name)
 
@@ -85,22 +84,22 @@ class Report(tk.Frame):
 
         top_bar.pack(fill=tk.X)
 
-        album = Album(album_frame, name)
+        album = VideoAlbum(album_frame, name)
         album.pack()
 
         album_frame.pack()
 
-class Album(tk.Frame):
+class VideoAlbum(tk.Frame):
     def __init__(self, parent, camera_name):
         super().__init__(parent, borderwidth=20)
-        self.dir = 'cctv_screenshots/' + camera_name
+        self.parent = parent
+        self.dir = 'clips/' + camera_name
         self.max_col = 4
         self.grid = GridFrame(self, self.max_col)
         self.empty_cells = []
-        self.frame_img = {}
 
         self.grid.pack(fill=tk.BOTH, expand=True)
-        self.create_pics()
+        self.create_videos()
 
     def create_grid(self):
         for i in range(self.max_col):
@@ -108,33 +107,51 @@ class Album(tk.Frame):
             self.empty_cells.append(new_frame)
             self.grid.create_cell(new_frame)
 
-    def resize_img(self, img_path):
-        img = Image.open(img_path)
-        resized = img.resize((80, 100), Image.ADAPTIVE)
-        return ImageTk.PhotoImage(resized)
-
-    def create_pic_frame(self, name):
-
+    def create_video_frame(self, name):
         def on_enter(e):
-            img_label.configure(cursor='hand2')
-            img_label.configure(bg='white')
+            video_label.configure(cursor='hand2')
+            video_label.configure(bg='white')
             name_label.configure(cursor='hand2')
             name_label.configure(bg='white')
 
         def on_leave(e):
-            img_label.configure(bg='lightgrey')
+            video_label.configure(bg='lightgrey')
             name_label.configure(bg='lightgrey')
 
         if len(self.empty_cells) == 0:
             self.create_grid()
-        
-        pic_dir = self.dir + '/' + name
-        cell = self.empty_cells.pop(0)
 
-        img = self.resize_img(pic_dir)
-        img_label = tk.Label(cell, image=img, bg='lightgrey')
-        img_label.label = img
-        img_label.pack(fill=tk.X)
+        video_dir = os.path.join(self.dir, name)
+        cell = self.empty_cells.pop(0)
+        is_playing = False
+
+        def play_video():
+            nonlocal is_playing
+            if not is_playing:
+                video_capture = cv2.VideoCapture(video_dir)
+
+                def update_frame():
+                    nonlocal is_playing
+                    ret, frame = video_capture.read()
+                    if not ret:
+                        video_capture.release()
+                        is_playing = False
+                    else:
+                        frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+                        image = Image.fromarray(frame)
+                        photo = ImageTk.PhotoImage(image=image)
+
+                        video_label.configure(image=photo)
+                        video_label.image = photo
+                        if is_playing:
+                            video_label.after(330, update_frame)
+
+                is_playing = True
+                update_frame()
+
+        video_label = tk.Label(cell, text="Click to Play", bg='lightgrey')
+        video_label.pack(fill=tk.X)
+        video_label.bind("<Button-1>", lambda event: play_video())
 
         name_label = tk.Label(cell, text=name, bg='lightgrey')
         name_label.pack(fill=tk.X)
@@ -143,8 +160,7 @@ class Album(tk.Frame):
         cell.bind('<Leave>', on_leave)
         cell.config(padx=20, pady=20)
 
-    def create_pics(self):
-        pic_names = os.listdir(self.dir)
-
-        for name in pic_names:
-            self.create_pic_frame(name)
+    def create_videos(self):
+        video_names = [entry for entry in os.listdir(self.dir) if entry.endswith('.mp4')]
+        for name in video_names:
+            self.create_video_frame(name)
