@@ -15,6 +15,7 @@ class DashboardHome(tk.Frame):
         self.camera_labels = []
         self.num_columns = 2
         self.create_dashboard_widgets()
+        main(self.num_cams)
 
     def create_dashboard_widgets(self):
         self.configure(bg='#444444')  # Adjust background color for the main frame
@@ -76,11 +77,11 @@ def setup_gui(num_cams):
     root.geometry("800x600")
     root.mainloop()
 
-def main():
-    parser = argparse.ArgumentParser()
+def main(num_cams):
+    '''    parser = argparse.ArgumentParser()
     parser.add_argument('--num_cams', type=int, default=1, help='Number of cameras using')
     args = parser.parse_args()
-    num_cams = args.num_cams
+    num_cams = args.num_cams'''
 
     model_threads = []
 
@@ -89,11 +90,13 @@ def main():
         model_thread.start()
         model_threads.append(model_thread)
 
+    time.sleep(2)
+
     gui_thread = threading.Thread(target=setup_gui, args=(num_cams,))
     gui_thread.start()
 
     gui_thread.join()
 
 
-if __name__ == "__main__":
-    main()
+#if __name__ == "__main__":
+#    main()

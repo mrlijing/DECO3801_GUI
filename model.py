@@ -6,7 +6,7 @@ from datetime import datetime
 
 def detect_live_camera(cam_num):
     # start webcam
-    cap = cv2.VideoCapture(cam_num)
+    cap = cv2.VideoCapture(f"/dev/video{cam_num*2}")
     cap.set(3, 640)
     cap.set(4, 480)
 
@@ -105,9 +105,9 @@ def detect_live_camera(cam_num):
 
             clip_frames = []
             clip_saved = True
-
+        #cv2.imshow('Webcam', original_image_with_cigarette_box)
         if cv2.waitKey(1) == ord('q'):
             break
-
+        
     cap.release()
     cv2.destroyAllWindows()   

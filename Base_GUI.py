@@ -1,20 +1,22 @@
 import tkinter as tk
 from Dashboard import DashboardHome
 from Report import Report
+import argparse
 
 
 class TopNavBar(tk.Frame):
-    def __init__(self, parent):
+    def __init__(self, parent, num_cams = 1):
         super().__init__(parent, bg='#333333')  # Adjust background color
         self.parent = parent
         self.current_page = None
         self.pages = {
-            'Dashboard': [DashboardHome(parent, 'cctv_recordings'), 'dashboard.png'],
-            'Report': [Report(parent, 'cctv_screenshots', self), 'file.png'],
+            'Dashboard': [DashboardHome(parent, 'live', num_cams=num_cams), 'dashboard.png'],
+            'Report': [Report(parent, 'clips', self), 'file.png'],
             'Settings': [create_content_frame(parent, 'Settings'), 'settings.png']
         }
         self.nav_items = {}
         self.create_nav_bar()  # Create the navigation bar
+
 
     def create_nav_bar(self):
         default_page = None
@@ -71,6 +73,11 @@ def main():
     def on_closing():
         root.destroy()
 
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--num_cams', type=int, default=1, help='Number of cameras using')
+    args = parser.parse_args()
+    num_cams = args.num_cams
+
     root = tk.Tk()
     root.title('VenueguardAI')  # Updated application name
     root.protocol("WM_DELETE_WINDOW", on_closing)
@@ -82,7 +89,7 @@ def main():
 
     heading_frame.pack(fill=tk.X)
 
-    navbar = TopNavBar(root)
+    navbar = TopNavBar(root, num_cams = num_cams)
     navbar.pack(fill=tk.X)
     navbar.show_page('Dashboard')
 
