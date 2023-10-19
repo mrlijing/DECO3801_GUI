@@ -7,7 +7,7 @@ import argparse
 import time
 
 class DashboardHome(tk.Frame):
-    def __init__(self, parent: tk.Frame, yolo_output_folder, num_cams=1):
+    def __init__(self, parent: tk.Frame, yolo_output_folder, num_cams=2):
         super().__init__(parent, bg='#333333')
         self.yolo_output_folder = yolo_output_folder
         self.num_cams = num_cams

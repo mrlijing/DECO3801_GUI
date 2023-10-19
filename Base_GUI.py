@@ -5,7 +5,7 @@ import argparse
 
 
 class TopNavBar(tk.Frame):
-    def __init__(self, parent, num_cams = 1):
+    def __init__(self, parent, num_cams = 2):
         super().__init__(parent, bg='#333333')  # Adjust background color
         self.parent = parent
         self.current_page = None

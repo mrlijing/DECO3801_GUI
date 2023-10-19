@@ -6,7 +6,7 @@ from datetime import datetime
 
 def detect_live_camera(cam_num):
     # start webcam
-    cap = cv2.VideoCapture(f"/dev/video{cam_num*2}")
+    cap = cv2.VideoCapture(cam_num)
     cap.set(3, 640)
     cap.set(4, 480)
 
