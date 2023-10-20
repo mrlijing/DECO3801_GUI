@@ -4,7 +4,7 @@ from Report import Report
 import argparse
 
 # The following codes are partially inspired by ChatGPT, in particular the positioning
-# of the navbar
+# of the navbar and interactive widgets
 
 class TopNavBar(tk.Frame):
     def __init__(self, parent, num_cams = 2):
@@ -14,7 +14,7 @@ class TopNavBar(tk.Frame):
         self.pages = {
             'Dashboard': [DashboardHome(parent, 'live', num_cams=num_cams), 'dashboard.png'],
             'Report': [Report(parent, 'live', self), 'file.png'],
-            'Settings': [create_content_frame(parent, 'Settings'), 'settings.png']
+            'Extra': [create_content_frame(parent, 'Attributions'), 'settings.png']
         }
         self.nav_items = {}
         self.create_nav_bar()  # Create the navigation bar
@@ -26,6 +26,8 @@ class TopNavBar(tk.Frame):
         for page_name, page_items in self.pages.items():
             nav_item = tk.Frame(self, bg='#333333', pady=1)  # Adjust background color
 
+            # Line 34, 37, 40-42 are codes for interactive widgets
+            # Line 35, 38, 43 are codes for the positioning of the navbar items and its child widgets
             image = tk.PhotoImage(file=page_items[1])
             image_label = tk.Label(nav_item, text=page_name, bg='#333333', image=image)  # Improved label
             image_label.image = image
@@ -66,8 +68,18 @@ class TopNavBar(tk.Frame):
 
 def create_content_frame(parent: tk, page_name):
     frame = tk.Frame(parent, bg='#FFFFFF')  # Improved background color
-    label = tk.Label(frame, text=f'Welcome to {page_name}', font=('Helvetica', 16), bg='#FFFFFF')
+    label = tk.Label(frame, text=f'{page_name}', font=('Helvetica', 16), bg='#FFFFFF')
+    
+    dashboard = tk.Label(frame, text="dashboard icon source: https://www.flaticon.com/free-icons/dashboard")
+    icons = tk.Label(frame, text="extra icon source: https://www.flaticon.com/free-icons/dashboard")
+    report = tk.Label(frame, text="report icon source: https://www.flaticon.com/free-icons/dashboard")
+    folder = tk.Label(frame, text="folder icon source: https://www.flaticon.com/free-icons/dashboard")
+    
     label.pack(padx=20, pady=20)
+    dashboard.pack(padx=20, pady=20)
+    icons.pack(padx=20, pady=20)
+    report.pack(padx=20, pady=20)
+    folder.pack(padx=20, pady=20)
     return frame
 
 
