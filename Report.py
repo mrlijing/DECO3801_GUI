@@ -5,11 +5,11 @@ from grid_frame import GridFrame
 import cv2
 
 class Report(tk.Frame):
-    def __init__(self, parent, screenshots_folder, navbar):
+    def __init__(self, parent, live_folder, navbar):
         super().__init__(parent, borderwidth=20)
         self.parent = parent
         self.navbar = navbar
-        self.screenshots_folder = screenshots_folder
+        self.live_folder = live_folder
         self.max_col = 4
         self.grid = GridFrame(self, self.max_col)
         self.empty_cells = []
@@ -59,7 +59,7 @@ class Report(tk.Frame):
         cell.config(padx=20, pady=20)
 
     def create_folders(self):
-        names = [entry for entry in os.listdir(self.screenshots_folder) if os.path.isdir(os.path.join(self.screenshots_folder, entry))]
+        names = [entry for entry in os.listdir(self.live_folder) if os.path.isdir(os.path.join(self.live_folder, entry))]
         for name in names:
             self.create_folder_frame(name)
 
@@ -74,26 +74,22 @@ class Report(tk.Frame):
         album_frame = tk.Frame(self.parent)
         self.navbar.current_page = album_frame
         
-        top_bar = tk.Frame(album_frame, bg='darkgrey')
-        
-        back_button = tk.Button(top_bar, text='Back', command=back)
-        back_button.pack(side='left', padx=10)
+        back_button = tk.Button(album_frame, text='Back', command=back)
+        back_button.pack(side=tk.LEFT, padx=10)
 
-        label = tk.Label(top_bar, text=name)
+        label = tk.Label(album_frame, text=name)
         label.pack(expand=True, fill='both')
 
-        top_bar.pack(fill=tk.X)
-
-        album = VideoAlbum(album_frame, name)
+        album = VideoAlbum(album_frame, name, self.live_folder)
         album.pack()
 
         album_frame.pack()
 
 class VideoAlbum(tk.Frame):
-    def __init__(self, parent, camera_name):
+    def __init__(self, parent, camera_name, live_folder):
         super().__init__(parent, borderwidth=20)
         self.parent = parent
-        self.dir = 'clips/' + camera_name
+        self.dir = live_folder + '/' + camera_name
         self.max_col = 4
         self.grid = GridFrame(self, self.max_col)
         self.empty_cells = []
