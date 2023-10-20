@@ -6,6 +6,7 @@ import threading
 import argparse
 import time
 
+#Almost all work in this file is original with the exception of some very basic chatgpt promtps. These are mentioned on line 24,38 and 90
 class DashboardHome(tk.Frame):
     def __init__(self, parent: tk.Frame, yolo_output_folder, num_cams=2):
         super().__init__(parent, bg='#333333')
@@ -20,6 +21,7 @@ class DashboardHome(tk.Frame):
     def create_dashboard_widgets(self):
         self.configure(bg='#444444')  # Adjust background color for the main frame
 
+        #prompt 1: can you improve the below text label with dark grey background and 20 font size: label = tk.Label(self, text='Dashboard Page', font=('Helvetica'), bg='white')
         label = tk.Label(self, text='Dashboard Page', font=('Helvetica', 20), bg='#444444', fg='#FFFFFF')  # Improved label
         label.pack(padx=20, pady=20)
 
@@ -33,12 +35,13 @@ class DashboardHome(tk.Frame):
             col = i % self.num_columns
 
             camera_frame = tk.Frame(camera_container, bg='black', width=320, height=240)
+            #prompt 2: give me an example of padding rows and columns using tkinter
             camera_frame.grid(row=row, column=col, padx=10, pady=10)
 
             self.camera_frames.append(camera_frame)
             self.camera_labels.append(tk.Label(camera_frame))
 
-        # You can add more widgets or customize the camera frames as needed
+        
 
         # Start a thread to update the camera images
         self.update_camera_images()
@@ -64,7 +67,7 @@ class DashboardHome(tk.Frame):
                 camera_label.pack(fill=tk.BOTH, expand=True)
 
         # Schedule the function to run periodically (adjust the time interval as needed)
-        self.after(1000, self.update_camera_images)
+        self.after(100, self.update_camera_images)
 
 def setup_gui(num_cams):
     root = tk.Tk()
@@ -84,7 +87,7 @@ def main(num_cams):
     num_cams = args.num_cams'''
 
     model_threads = []
-
+    #give me an example of threading in python
     for cam_num in range (num_cams):
         model_thread = threading.Thread(target=detect_live_camera, args=(cam_num,), daemon=True)
         model_thread.start()

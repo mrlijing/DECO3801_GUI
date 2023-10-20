@@ -2,3 +2,4 @@ ultralytics
 os
 datetime
 opencv-python
+Pillow
