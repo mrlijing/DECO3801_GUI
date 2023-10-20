@@ -3,6 +3,8 @@ from Dashboard import DashboardHome
 from Report import Report
 import argparse
 
+# The following codes are partially inspired by ChatGPT, in particular the positioning
+# of the navbar
 
 class TopNavBar(tk.Frame):
     def __init__(self, parent, num_cams = 2):

@@ -4,6 +4,8 @@ from PIL import Image, ImageTk
 from grid_frame import GridFrame
 import cv2
 
+# Original Work
+
 class Report(tk.Frame):
     def __init__(self, parent, live_folder, navbar):
         super().__init__(parent, borderwidth=20)

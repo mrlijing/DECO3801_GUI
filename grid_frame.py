@@ -1,5 +1,7 @@
 import tkinter as tk
 
+# Original Work
+
 class GridFrame(tk.Frame):
     def __init__(self, parent, max_col):
         super().__init__(parent)
