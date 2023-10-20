@@ -16,7 +16,7 @@ def detect_live_camera(cam_num):
     person_net = YOLO("./models/yolov8n.pt")
     smoking_net = YOLO("./models/cigarette_detection.pt")
 
-    max_iters = 3
+    max_iters = 10
     iters_since_detection = max_iters+1
     clip_frames = []
     clip_saved = True
