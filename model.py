@@ -4,6 +4,8 @@ import torch
 import os
 from datetime import datetime
 
+# All work is original unless specified (the YOLO model was used, which is referenced below)
+
 def detect_live_camera(cam_num):
     # start webcam
     cap = cv2.VideoCapture(cam_num)
@@ -13,6 +15,8 @@ def detect_live_camera(cam_num):
     # model
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
+    # The code snippets below use YOLO, which is sourced from
+    # https://docs.ultralytics.com/
     person_net = YOLO("./models/yolov8n.pt")
     smoking_net = YOLO("./models/cigarette_detection.pt")
 
