@@ -13,7 +13,7 @@ class Report(tk.Frame):
         self.navbar = navbar
         self.live_folder = live_folder
         self.max_col = 4
-        self.grid = GridFrame(self, self.max_col)
+        self.grid = GridFrame(self, self.max_col) # Create a Grid Template with 4 columns 
         self.empty_cells = []
 
         self.create_folders()
@@ -21,8 +21,8 @@ class Report(tk.Frame):
 
     def create_grid(self):
         for i in range(self.max_col):
-            new_frame = tk.Frame(self.grid)
-            self.empty_cells.append(new_frame)
+            new_frame = tk.Frame(self.grid) # New frame for new cell
+            self.empty_cells.append(new_frame) # Add newly created cells to list of empty cells
             self.grid.create_cell(new_frame)
 
     def pack_items(self):
@@ -30,13 +30,13 @@ class Report(tk.Frame):
 
     def create_folder_frame(self, name):
 
-        def on_enter(e):
+        def on_enter(e): # Hover effects when hovering over folders
             img_label.configure(cursor='hand2')
             img_label.configure(bg='white')
             name_label.configure(cursor='hand2')
             name_label.configure(bg='white')
 
-        def on_leave(e):
+        def on_leave(e): # Hover effects when hovering over folders stops
             img_label.configure(bg='lightgrey')
             name_label.configure(bg='lightgrey')
 
@@ -61,6 +61,7 @@ class Report(tk.Frame):
         cell.config(padx=20, pady=20)
 
     def create_folders(self):
+        # Search for folder names in "live" folder
         names = [entry for entry in os.listdir(self.live_folder) if os.path.isdir(os.path.join(self.live_folder, entry))]
         for name in names:
             self.create_folder_frame(name)
